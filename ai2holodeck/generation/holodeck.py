@@ -71,6 +71,7 @@ class Holodeck:
             model_name=LLM_MODEL_NAME,
             max_tokens=2048,
             openai_api_key=openai_api_key,
+            openai_api_base="https://api.chatanywhere.tech/v1"
         )
 
         # initialize CLIP
@@ -324,8 +325,8 @@ class Holodeck:
         scene["objects"] = scene["floor_objects"] + scene["wall_objects"]
 
         # generate small objects
-        scene = self.generate_small_objects(scene, used_assets=used_assets)
-        scene["objects"] += scene["small_objects"]
+        # scene = self.generate_small_objects(scene, used_assets=used_assets)
+        # scene["objects"] += scene["small_objects"]
 
         # generate ceiling objects
         if add_ceiling:
@@ -370,21 +371,21 @@ class Holodeck:
             json_kwargs=dict(indent=4),
         )
 
-        # save top down image
-        if generate_image:
-            top_image = get_top_down_frame(scene, self.objaverse_asset_dir, 1024, 1024)
-            top_image.show()
-            top_image.save(os.path.join(save_dir, f"{query_name}.png"))
+        # # save top down image
+        # if generate_image:
+        #     top_image = get_top_down_frame(scene, self.objaverse_asset_dir, 1024, 1024)
+        #     top_image.show()
+        #     top_image.save(os.path.join(save_dir, f"{query_name}.png"))
 
-        # save video
-        if generate_video:
-            scene["objects"] = (
-                scene["floor_objects"] + scene["wall_objects"] + scene["small_objects"]
-            )
-            final_video = room_video(scene, self.objaverse_asset_dir, 1024, 1024)
-            final_video.write_videofile(
-                os.path.join(save_dir, f"{query_name}.mp4"), fps=30
-            )
+        # # save video
+        # if generate_video:
+        #     scene["objects"] = (
+        #         scene["floor_objects"] + scene["wall_objects"] + scene["small_objects"]
+        #     )
+        #     final_video = room_video(scene, self.objaverse_asset_dir, 1024, 1024)
+        #     final_video.write_videofile(
+        #         os.path.join(save_dir, f"{query_name}.mp4"), fps=30
+        #     )
 
         return scene, save_dir
 
